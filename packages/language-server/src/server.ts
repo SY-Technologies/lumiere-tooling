@@ -8,10 +8,11 @@ import {
   ProposedFeatures,
   TextDocumentSyncKind,
   TextDocuments,
+  MarkupKind,
 } from "vscode-languageserver/node";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { LumiereCompiler } from "./compiler";
-import { byteRangeToLspRange } from "./positions";
+import { byteRangeToLspRange, positionToByteOffset } from "./positions";
 import { LumiereSeverity } from "./protocol";
 
 interface InitializationOptions {
@@ -27,6 +28,7 @@ const documents = new TextDocuments(TextDocument);
 const pendingAnalysis = new Map<string, NodeJS.Timeout>();
 const documentVersions = new Map<string, number>();
 const compilers = new Map<string, LumiereCompiler>();
+const inspectionCompilers = new Map<string, LumiereCompiler>();
 let compilerExecutable = process.env.LUMIERE_EXECUTABLE || "lumiere";
 
 connection.onInitialize((params: InitializeParams) => {
@@ -37,8 +39,37 @@ connection.onInitialize((params: InitializeParams) => {
   return {
     capabilities: {
       textDocumentSync: TextDocumentSyncKind.Full,
+      hoverProvider: true,
     },
   };
+});
+
+connection.onHover(async (params) => {
+  const document = documents.get(params.textDocument.uri);
+  if (!document) {
+    return null;
+  }
+  const source = document.getText();
+  const sourcePath = document.uri.startsWith("file:") ? fileURLToPath(document.uri) : document.uri;
+  try {
+    const result = await inspectionCompilerFor(document.uri).inspect(
+      source,
+      sourcePath,
+      positionToByteOffset(source, params.position),
+    );
+    if (!result.inspection) {
+      return null;
+    }
+    return {
+      contents: { kind: MarkupKind.Markdown, value: `\`\`\`lumiere\n${result.inspection.detail}\n\`\`\`` },
+      range: byteRangeToLspRange(source, result.inspection.range.start, result.inspection.range.end),
+    };
+  } catch (error) {
+    if (!isCancellation(error)) {
+      connection.console.error(error instanceof Error ? error.message : String(error));
+    }
+    return null;
+  }
 });
 
 connection.onInitialized(() => {
@@ -52,6 +83,10 @@ connection.onDidChangeConfiguration(async () => {
     compiler.cancel();
   }
   compilers.clear();
+  for (const compiler of inspectionCompilers.values()) {
+    compiler.cancel();
+  }
+  inspectionCompilers.clear();
   for (const document of documents.all()) {
     scheduleAnalysis(document);
   }
@@ -74,6 +109,8 @@ documents.onDidClose((event) => {
   documentVersions.delete(event.document.uri);
   compilers.get(event.document.uri)?.cancel();
   compilers.delete(event.document.uri);
+  inspectionCompilers.get(event.document.uri)?.cancel();
+  inspectionCompilers.delete(event.document.uri);
   connection.sendDiagnostics({ uri: event.document.uri, diagnostics: [] });
 });
 
@@ -122,6 +159,16 @@ function compilerFor(uri: string): LumiereCompiler {
   if (!compiler) {
     compiler = new LumiereCompiler(compilerExecutable);
     compilers.set(uri, compiler);
+  }
+  return compiler;
+}
+
+/** Returns the independent inspection process owner assigned to a document URI. */
+function inspectionCompilerFor(uri: string): LumiereCompiler {
+  let compiler = inspectionCompilers.get(uri);
+  if (!compiler) {
+    compiler = new LumiereCompiler(compilerExecutable);
+    inspectionCompilers.set(uri, compiler);
   }
   return compiler;
 }

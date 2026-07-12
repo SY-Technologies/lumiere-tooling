@@ -34,3 +34,22 @@ export function byteOffsetToPosition(source: string, requestedOffset: number): P
   }
   return Position.create(line, character);
 }
+
+/** Converts a zero-based LSP UTF-16 position to a clamped UTF-8 byte offset. */
+export function positionToByteOffset(source: string, position: Position): number {
+  const lines = source.split("\n");
+  const line = Math.min(Math.max(position.line, 0), lines.length - 1);
+  let offset = Buffer.byteLength(lines.slice(0, line).join("\n"), "utf8");
+  if (line > 0) {
+    offset += 1;
+  }
+  let characters = 0;
+  for (const codePoint of lines[line]) {
+    if (characters + codePoint.length > Math.max(position.character, 0)) {
+      break;
+    }
+    characters += codePoint.length;
+    offset += Buffer.byteLength(codePoint, "utf8");
+  }
+  return offset;
+}

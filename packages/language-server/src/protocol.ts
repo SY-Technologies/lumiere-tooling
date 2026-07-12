@@ -22,6 +22,40 @@ export interface CheckResult {
   diagnostics: LumiereDiagnostic[];
 }
 
+export interface InspectionResult {
+  protocolVersion: number;
+  inspection: {
+    label: string;
+    detail: string;
+    range: { start: number; end: number };
+  } | null;
+}
+
+/** Parses and validates one `lumiere inspect --format=json` response. */
+export function parseInspectionResult(output: string): InspectionResult {
+  const parsed: unknown = JSON.parse(output);
+  if (typeof parsed !== "object" || parsed === null) {
+    throw new Error("Lumiere returned an invalid inspection response");
+  }
+  const result = parsed as Partial<InspectionResult>;
+  if (result.protocolVersion !== SUPPORTED_PROTOCOL_VERSION || !isInspection(result.inspection)) {
+    throw new Error("Lumiere returned an invalid inspection response");
+  }
+  return result as InspectionResult;
+}
+
+function isInspection(value: unknown): value is InspectionResult["inspection"] {
+  if (value === null) {
+    return true;
+  }
+  if (typeof value !== "object") {
+    return false;
+  }
+  const inspection = value as NonNullable<InspectionResult["inspection"]>;
+  return typeof inspection.label === "string" && typeof inspection.detail === "string" &&
+    typeof inspection.range?.start === "number" && typeof inspection.range.end === "number";
+}
+
 /**
  * Parses and validates one complete `lumiere check --format=json` response.
  *
