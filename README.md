@@ -82,8 +82,8 @@ Every CI run uploads an installable VSIX artifact. Pushing a version tag builds,
 tests, packages, and attaches that VSIX to a GitHub Release:
 
 ```bash
-git tag -a v0.2.1 -m "Release v0.2.1"
-git push origin v0.2.1
+git tag -a v0.2.2 -m "Release v0.2.2"
+git push origin v0.2.2
 ```
 
 Store publication is deliberately manual. Configure these GitHub Actions

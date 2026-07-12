@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.2
+
+- Replace the document-shaped file icon with a transparent `Lum` light wordmark.
+
 ## 0.2.1
 
 - Add light and dark file icons for `.lum` files.
