@@ -6,7 +6,11 @@
     { "include": "#comments" },
     { "include": "#strings" },
     { "include": "#declarations" },
+    { "include": "#types" },
+    { "include": "#members" },
+    { "include": "#imports" },
     { "include": "#keywords" },
+    { "include": "#calls" },
     { "include": "#constants" },
     { "include": "#numbers" },
     { "include": "#operators" }
@@ -43,6 +47,65 @@
           "captures": {
             "1": { "name": "storage.type.lumiere" },
             "2": { "name": "entity.name.type.lumiere" }
+          }
+        },
+        {
+          "match": "(?<![\\p{L}\\p{N}_])(soit)\\s+(fixe\\s+)?([\\p{L}_][\\p{L}\\p{N}_]*)",
+          "captures": {
+            "1": { "name": "storage.type.variable.lumiere" },
+            "2": { "name": "storage.modifier.lumiere" },
+            "3": { "name": "variable.other.definition.lumiere" }
+          }
+        },
+        {
+          "name": "variable.parameter.lumiere",
+          "match": "[\\p{L}_][\\p{L}\\p{N}_]*(?=\\s*:\\s*[\\p{L}_])"
+        }
+      ]
+    },
+    "types": {
+      "patterns": [
+        {
+          "name": "support.type.primitive.lumiere",
+          "match": "(?<![\\p{L}\\p{N}_])(?:Entier|Décimal|Decimal|Texte|Booléen|Booleen|Symbole|Rien|Liste|ListeFixe|Dictionnaire|Ensemble|Intervalle)(?![\\p{L}\\p{N}_])"
+        },
+        {
+          "name": "entity.name.type.lumiere",
+          "match": "(?<=:\\s)[\\p{L}_][\\p{L}\\p{N}_]*"
+        },
+        {
+          "name": "entity.name.type.lumiere",
+          "match": "(?<=->\\s)[\\p{L}_][\\p{L}\\p{N}_]*"
+        }
+      ]
+    },
+    "calls": {
+      "patterns": [
+        {
+          "name": "entity.name.function.call.lumiere",
+          "match": "(?<![.\\p{L}\\p{N}_])[\\p{L}_][\\p{L}\\p{N}_]*(?=\\s*\\()"
+        }
+      ]
+    },
+    "members": {
+      "patterns": [
+        {
+          "name": "entity.name.function.call.lumiere",
+          "match": "(?<=\\.)[\\p{L}_][\\p{L}\\p{N}_]*(?=\\s*\\()"
+        },
+        {
+          "name": "variable.other.property.lumiere",
+          "match": "(?<=\\.)[\\p{L}_][\\p{L}\\p{N}_]*"
+        }
+      ]
+    },
+    "imports": {
+      "patterns": [
+        {
+          "match": "(?<![\\p{L}\\p{N}_])(importer)\\s+([\\p{L}_][\\p{L}\\p{N}_.]*)",
+          "captures": {
+            "1": { "name": "keyword.control.import.lumiere" },
+            "2": { "name": "entity.name.namespace.lumiere" }
           }
         }
       ]

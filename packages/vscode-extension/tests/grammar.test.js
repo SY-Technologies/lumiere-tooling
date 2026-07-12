@@ -29,6 +29,25 @@ test("highlights every compiler keyword spelling", () => {
   }
 });
 
+test("defines scopes for common source constructs", () => {
+  const grammar = readJson("syntaxes/lumiere.tmLanguage.json");
+  const grammarText = JSON.stringify(grammar);
+
+  for (const repositoryName of ["declarations", "types", "calls", "members", "imports"]) {
+    assert.ok(grammar.repository[repositoryName], `missing grammar repository: ${repositoryName}`);
+  }
+  for (const scope of [
+    "variable.other.definition.lumiere",
+    "variable.parameter.lumiere",
+    "support.type.primitive.lumiere",
+    "entity.name.function.call.lumiere",
+    "variable.other.property.lumiere",
+    "entity.name.namespace.lumiere",
+  ]) {
+    assert.ok(grammarText.includes(scope), `missing scope: ${scope}`);
+  }
+});
+
 function readJson(relativePath) {
   return JSON.parse(fs.readFileSync(path.join(extensionRoot, relativePath), "utf8"));
 }
