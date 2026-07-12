@@ -1,8 +1,8 @@
 {
   "name": "lumiere-language-support",
   "displayName": "Lumiere Language Support",
-  "description": "Syntax highlighting and compiler-backed diagnostics for Lumiere",
-  "version": "0.1.0",
+  "description": "Syntax highlighting, compiler-backed diagnostics, and hover information for Lumiere",
+  "version": "0.2.0",
   "private": true,
   "publisher": "lumiere-lang",
   "license": "MIT",

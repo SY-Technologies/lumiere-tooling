@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0
+
+- Add compiler-backed hover for language keywords and source declarations.
+- Highlight variables, parameters, types, calls, members, and imported modules.
+
 ## 0.1.0
 
 - Add Lumiere language registration and TextMate syntax highlighting.

@@ -1,8 +1,8 @@
 # Lumiere Tooling
 
 Editor-independent tooling for the Lumiere language. Language rules remain in
-the Lumiere compiler; this repository translates compiler diagnostics into LSP
-diagnostics and packages editor integration.
+the Lumiere compiler; this repository translates compiler diagnostics and
+source inspection into LSP features and packages editor integration.
 
 ## Development
 
@@ -34,12 +34,14 @@ The server sends the current editor buffer to:
 
 ```bash
 lumiere check --format=json --stdin --source-path /absolute/file.lum
+lumiere inspect --format=json --stdin --source-path /absolute/file.lum --offset 42
 ```
 
 It debounces edits, cancels superseded analysis for the same document, rejects
 unknown compiler protocol versions, converts compiler byte offsets to LSP
-UTF-16 positions, and publishes diagnostics. Separate documents use separate
-compiler processes so they cannot cancel each other.
+UTF-16 positions, publishes diagnostics, and requests hover information at the
+cursor. Diagnostics and hover use independent compiler processes, and separate
+documents cannot cancel each other's work.
 
 ## Build A VSIX
 
@@ -80,8 +82,8 @@ Every CI run uploads an installable VSIX artifact. Pushing a version tag builds,
 tests, packages, and attaches that VSIX to a GitHub Release:
 
 ```bash
-git tag -a v0.1.0 -m "Release v0.1.0"
-git push origin v0.1.0
+git tag -a v0.2.0 -m "Release v0.2.0"
+git push origin v0.2.0
 ```
 
 Store publication is deliberately manual. Configure these GitHub Actions
