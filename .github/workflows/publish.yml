@@ -1,0 +1,75 @@
+name: Publish Extension
+
+on:
+  workflow_dispatch:
+    inputs:
+      marketplace:
+        description: Publish to Visual Studio Marketplace
+        required: true
+        type: boolean
+        default: false
+      open_vsx:
+        description: Publish to Open VSX
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.18.1
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - run: npm run package:vscode
+      - uses: actions/upload-artifact@v4
+        with:
+          name: extension
+          path: packages/vscode-extension/*.vsix
+          if-no-files-found: error
+
+  marketplace:
+    if: inputs.marketplace
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.18.1
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          name: extension
+          path: extension
+      - run: npx --no-install vsce publish --packagePath extension/*.vsix --pat "$VSCE_PAT"
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+
+  open-vsx:
+    if: inputs.open_vsx
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.18.1
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          name: extension
+          path: extension
+      - run: npx --no-install ovsx publish extension/*.vsix -p "$OVSX_PAT"
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
