@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1
+
+- Add light and dark file icons for `.lum` files.
+
 ## 0.2.0
 
 - Add compiler-backed hover for language keywords and source declarations.

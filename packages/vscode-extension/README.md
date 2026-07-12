@@ -3,6 +3,7 @@
 Official editor support for `.lum` files:
 
 - syntax highlighting
+- light and dark file icons
 - bracket, comment, and indentation configuration
 - compiler-backed syntax diagnostics for saved and unsaved files
 - compiler-backed hover for language keywords and source declarations

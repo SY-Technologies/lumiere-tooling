@@ -10,6 +10,10 @@ test("registers Lumiere files and its TextMate grammar", () => {
   const grammar = readJson("syntaxes/lumiere.tmLanguage.json");
 
   assert.deepEqual(manifest.contributes.languages[0].extensions, [".lum"]);
+  assert.equal(manifest.contributes.languages[0].icon.light, "./icons/lumiere-light.svg");
+  assert.equal(manifest.contributes.languages[0].icon.dark, "./icons/lumiere-dark.svg");
+  assert.ok(fs.existsSync(path.join(extensionRoot, "icons", "lumiere-light.svg")));
+  assert.ok(fs.existsSync(path.join(extensionRoot, "icons", "lumiere-dark.svg")));
   assert.equal(manifest.contributes.grammars[0].scopeName, "source.lumiere");
   assert.equal(grammar.scopeName, "source.lumiere");
 });
