@@ -1,0 +1,86 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Lumiere",
+  "scopeName": "source.lumiere",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#declarations" },
+    { "include": "#keywords" },
+    { "include": "#constants" },
+    { "include": "#numbers" },
+    { "include": "#operators" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        { "name": "comment.line.double-slash.lumiere", "begin": "//", "end": "$" },
+        { "name": "comment.block.lumiere", "begin": "/\\*", "end": "\\*/" }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.lumiere",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [{ "name": "constant.character.escape.lumiere", "match": "\\\\." }]
+        },
+        { "name": "constant.character.lumiere", "match": "'(?:[^'\\n]|\\\\.)'" }
+      ]
+    },
+    "declarations": {
+      "patterns": [
+        {
+          "match": "(?<![\\p{L}\\p{N}_])(fonction)\\s+([\\p{L}_][\\p{L}\\p{N}_]*)(?![\\p{L}\\p{N}_])",
+          "captures": {
+            "1": { "name": "storage.type.function.lumiere" },
+            "2": { "name": "entity.name.function.lumiere" }
+          }
+        },
+        {
+          "match": "(?<![\\p{L}\\p{N}_])(classe|interface)\\s+([\\p{L}_][\\p{L}\\p{N}_]*)(?![\\p{L}\\p{N}_])",
+          "captures": {
+            "1": { "name": "storage.type.lumiere" },
+            "2": { "name": "entity.name.type.lumiere" }
+          }
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.lumiere",
+          "match": "(?<![\\p{L}\\p{N}_])(?:si|sinon|pour|chaque|dans|tant\\s+que|agir\\s+selon|arrêter|arreter|continuer|retourne|essayer|attraper|finalement|lancer)(?![\\p{L}\\p{N}_])"
+        },
+        {
+          "name": "keyword.declaration.lumiere",
+          "match": "(?<![\\p{L}\\p{N}_])(?:soit|fixe|fonction|classe|interface|réalise|realise|remplace|public|privé|prive)(?![\\p{L}\\p{N}_])"
+        },
+        {
+          "name": "keyword.other.lumiere",
+          "match": "(?<![\\p{L}\\p{N}_])(?:importer|comme|ici|parent|en)(?![\\p{L}\\p{N}_])"
+        },
+        {
+          "name": "keyword.operator.word.lumiere",
+          "match": "(?<![\\p{L}\\p{N}_])(?:est|et|ou|non)(?![\\p{L}\\p{N}_])"
+        }
+      ]
+    },
+    "constants": {
+      "patterns": [
+        { "name": "constant.language.lumiere", "match": "(?<![\\p{L}\\p{N}_])(?:vrai|faux|rien)(?![\\p{L}\\p{N}_])" }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        { "name": "constant.numeric.lumiere", "match": "(?<![\\p{L}\\p{N}_])(?:\\d+(?:\\.\\d+)?)(?![\\p{L}\\p{N}_])" }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        { "name": "keyword.operator.lumiere", "match": "==|!=|<=|>=|->|[+\\-*/%=&|<>]" }
+      ]
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "lumiere-tooling",
+  "private": true,
+  "engines": {
+    "node": ">=20.18.1"
+  },
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "package:vscode": "npm run package --workspace lumiere-language-support"
+  },
+  "devDependencies": {
+    "ovsx": "1.0.2"
+  }
+}
