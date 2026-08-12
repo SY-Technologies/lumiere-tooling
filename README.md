@@ -37,6 +37,9 @@ lumiere check --format=json --stdin --source-path /absolute/file.lum
 lumiere inspect --format=json --stdin --source-path /absolute/file.lum --offset 42
 ```
 
+Hover shows signatures, parameters, return types, standard-library help, and
+documentation attached to declarations with `/** ... */` comments.
+
 It debounces edits, cancels superseded analysis for the same document, rejects
 unknown compiler protocol versions, converts compiler byte offsets to LSP
 UTF-16 positions, publishes diagnostics, and requests hover information at the
@@ -82,8 +85,8 @@ Every CI run uploads an installable VSIX artifact. Pushing a version tag builds,
 tests, packages, and attaches that VSIX to a GitHub Release:
 
 ```bash
-git tag -a v0.2.2 -m "Release v0.2.2"
-git push origin v0.2.2
+git tag -a v0.3.0 -m "Release v0.3.0"
+git push origin v0.3.0
 ```
 
 Store publication is deliberately manual. Configure these GitHub Actions

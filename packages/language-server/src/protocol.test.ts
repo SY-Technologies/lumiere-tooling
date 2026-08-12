@@ -21,14 +21,32 @@ test("accepts diagnostic protocol version 1", () => {
 
 test("parses a valid inspection response", () => {
   const result = parseInspectionResult(
-    '{"protocolVersion":1,"inspection":{"label":"x","detail":"soit x: Entier","range":{"start":5,"end":6}}}',
+    JSON.stringify({
+      protocolVersion: 2,
+      inspection: {
+        label: "x",
+        kind: "variable",
+        signature: "soit x: Entier",
+        parameters: [],
+        returnType: "Entier",
+        documentation: "",
+        range: { start: 5, end: 6 },
+      },
+    }),
   );
 
-  assert.equal(result.inspection?.detail, "soit x: Entier");
+  assert.equal(result.inspection?.label, "x");
+  assert.equal(result.inspection?.signature, "soit x: Entier");
 });
 
 test("accepts an empty inspection response", () => {
-  assert.equal(parseInspectionResult('{"protocolVersion":1,"inspection":null}').inspection, null);
+  assert.equal(parseInspectionResult('{"protocolVersion":2,"inspection":null}').inspection, null);
+});
+test("rejects an unsupported inspection protocol version", () => {
+  assert.throws(
+    () => parseInspectionResult('{"protocolVersion":1,"inspection":null}'),
+    /invalid inspection response/,
+  );
 });
 test("rejects an unsupported protocol version", () => {
   assert.throws(

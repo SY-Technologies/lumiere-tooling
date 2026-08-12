@@ -47,6 +47,7 @@ test("defines scopes for common source constructs", () => {
     "entity.name.function.call.lumiere",
     "variable.other.property.lumiere",
     "entity.name.namespace.lumiere",
+    "comment.block.documentation.lumiere",
   ]) {
     assert.ok(grammarText.includes(scope), `missing scope: ${scope}`);
   }

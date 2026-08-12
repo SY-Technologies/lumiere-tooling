@@ -3,23 +3,58 @@
   "name": "Lumiere",
   "scopeName": "source.lumiere",
   "patterns": [
-    { "include": "#comments" },
-    { "include": "#strings" },
-    { "include": "#declarations" },
-    { "include": "#types" },
-    { "include": "#members" },
-    { "include": "#imports" },
-    { "include": "#keywords" },
-    { "include": "#calls" },
-    { "include": "#constants" },
-    { "include": "#numbers" },
-    { "include": "#operators" }
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#declarations"
+    },
+    {
+      "include": "#types"
+    },
+    {
+      "include": "#members"
+    },
+    {
+      "include": "#imports"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#calls"
+    },
+    {
+      "include": "#constants"
+    },
+    {
+      "include": "#numbers"
+    },
+    {
+      "include": "#operators"
+    }
   ],
   "repository": {
     "comments": {
       "patterns": [
-        { "name": "comment.line.double-slash.lumiere", "begin": "//", "end": "$" },
-        { "name": "comment.block.lumiere", "begin": "/\\*", "end": "\\*/" }
+        {
+          "name": "comment.line.double-slash.lumiere",
+          "begin": "//",
+          "end": "$"
+        },
+        {
+          "name": "comment.block.documentation.lumiere",
+          "begin": "/\\*\\*",
+          "end": "\\*/"
+        },
+        {
+          "name": "comment.block.lumiere",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
       ]
     },
     "strings": {
@@ -28,9 +63,17 @@
           "name": "string.quoted.double.lumiere",
           "begin": "\"",
           "end": "\"",
-          "patterns": [{ "name": "constant.character.escape.lumiere", "match": "\\\\." }]
+          "patterns": [
+            {
+              "name": "constant.character.escape.lumiere",
+              "match": "\\\\."
+            }
+          ]
         },
-        { "name": "constant.character.lumiere", "match": "'(?:[^'\\n]|\\\\.)'" }
+        {
+          "name": "constant.character.lumiere",
+          "match": "'(?:[^'\\n]|\\\\.)'"
+        }
       ]
     },
     "declarations": {
@@ -38,23 +81,37 @@
         {
           "match": "(?<![\\p{L}\\p{N}_])(fonction)\\s+([\\p{L}_][\\p{L}\\p{N}_]*)(?![\\p{L}\\p{N}_])",
           "captures": {
-            "1": { "name": "storage.type.function.lumiere" },
-            "2": { "name": "entity.name.function.lumiere" }
+            "1": {
+              "name": "storage.type.function.lumiere"
+            },
+            "2": {
+              "name": "entity.name.function.lumiere"
+            }
           }
         },
         {
           "match": "(?<![\\p{L}\\p{N}_])(classe|interface)\\s+([\\p{L}_][\\p{L}\\p{N}_]*)(?![\\p{L}\\p{N}_])",
           "captures": {
-            "1": { "name": "storage.type.lumiere" },
-            "2": { "name": "entity.name.type.lumiere" }
+            "1": {
+              "name": "storage.type.lumiere"
+            },
+            "2": {
+              "name": "entity.name.type.lumiere"
+            }
           }
         },
         {
           "match": "(?<![\\p{L}\\p{N}_])(soit)\\s+(fixe\\s+)?([\\p{L}_][\\p{L}\\p{N}_]*)",
           "captures": {
-            "1": { "name": "storage.type.variable.lumiere" },
-            "2": { "name": "storage.modifier.lumiere" },
-            "3": { "name": "variable.other.definition.lumiere" }
+            "1": {
+              "name": "storage.type.variable.lumiere"
+            },
+            "2": {
+              "name": "storage.modifier.lumiere"
+            },
+            "3": {
+              "name": "variable.other.definition.lumiere"
+            }
           }
         },
         {
@@ -104,8 +161,12 @@
         {
           "match": "(?<![\\p{L}\\p{N}_])(importer)\\s+([\\p{L}_][\\p{L}\\p{N}_.]*)",
           "captures": {
-            "1": { "name": "keyword.control.import.lumiere" },
-            "2": { "name": "entity.name.namespace.lumiere" }
+            "1": {
+              "name": "keyword.control.import.lumiere"
+            },
+            "2": {
+              "name": "entity.name.namespace.lumiere"
+            }
           }
         }
       ]
@@ -132,17 +193,26 @@
     },
     "constants": {
       "patterns": [
-        { "name": "constant.language.lumiere", "match": "(?<![\\p{L}\\p{N}_])(?:vrai|faux|rien)(?![\\p{L}\\p{N}_])" }
+        {
+          "name": "constant.language.lumiere",
+          "match": "(?<![\\p{L}\\p{N}_])(?:vrai|faux|rien)(?![\\p{L}\\p{N}_])"
+        }
       ]
     },
     "numbers": {
       "patterns": [
-        { "name": "constant.numeric.lumiere", "match": "(?<![\\p{L}\\p{N}_])(?:\\d+(?:\\.\\d+)?)(?![\\p{L}\\p{N}_])" }
+        {
+          "name": "constant.numeric.lumiere",
+          "match": "(?<![\\p{L}\\p{N}_])(?:\\d+(?:\\.\\d+)?)(?![\\p{L}\\p{N}_])"
+        }
       ]
     },
     "operators": {
       "patterns": [
-        { "name": "keyword.operator.lumiere", "match": "==|!=|<=|>=|->|[+\\-*/%=&|<>]" }
+        {
+          "name": "keyword.operator.lumiere",
+          "match": "==|!=|<=|>=|->|[+\\-*/%=&|<>]"
+        }
       ]
     }
   }

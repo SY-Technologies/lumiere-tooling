@@ -1,4 +1,5 @@
 export const SUPPORTED_PROTOCOL_VERSION = 1;
+export const INSPECTION_PROTOCOL_VERSION = 2;
 
 export type LumiereSeverity = "error" | "warning" | "information" | "hint";
 
@@ -22,13 +23,26 @@ export interface CheckResult {
   diagnostics: LumiereDiagnostic[];
 }
 
+export interface LumiereInspection {
+  /** Display name of the symbol. */
+  label: string;
+  /** Declaration category, e.g. "fonction", "variable", "classe". */
+  kind: string;
+  /** One-line declarative signature rendered in a code block. */
+  signature: string;
+  /** Formatted parameters, each "name : Type". */
+  parameters: string[];
+  /** Returned type, when meaningful. */
+  returnType: string;
+  /** Free-form documentation from Javadoc-style block comments or the stdlib registry. */
+  documentation: string;
+  /** Half-open zero-based UTF-8 byte range. */
+  range: { start: number; end: number };
+}
+
 export interface InspectionResult {
   protocolVersion: number;
-  inspection: {
-    label: string;
-    detail: string;
-    range: { start: number; end: number };
-  } | null;
+  inspection: LumiereInspection | null;
 }
 
 /** Parses and validates one `lumiere inspect --format=json` response. */
@@ -38,22 +52,31 @@ export function parseInspectionResult(output: string): InspectionResult {
     throw new Error("Lumiere returned an invalid inspection response");
   }
   const result = parsed as Partial<InspectionResult>;
-  if (result.protocolVersion !== SUPPORTED_PROTOCOL_VERSION || !isInspection(result.inspection)) {
+  if (result.protocolVersion !== INSPECTION_PROTOCOL_VERSION || !isInspection(result.inspection)) {
     throw new Error("Lumiere returned an invalid inspection response");
   }
   return result as InspectionResult;
 }
 
-function isInspection(value: unknown): value is InspectionResult["inspection"] {
+function isInspection(value: unknown): value is LumiereInspection | null {
   if (value === null) {
     return true;
   }
   if (typeof value !== "object") {
     return false;
   }
-  const inspection = value as NonNullable<InspectionResult["inspection"]>;
-  return typeof inspection.label === "string" && typeof inspection.detail === "string" &&
-    typeof inspection.range?.start === "number" && typeof inspection.range.end === "number";
+  const inspection = value as Partial<LumiereInspection>;
+  return (
+    typeof inspection.label === "string" &&
+    typeof inspection.kind === "string" &&
+    typeof inspection.signature === "string" &&
+    Array.isArray(inspection.parameters) &&
+    inspection.parameters.every((entry) => typeof entry === "string") &&
+    typeof inspection.returnType === "string" &&
+    typeof inspection.documentation === "string" &&
+    typeof inspection.range?.start === "number" &&
+    typeof inspection.range.end === "number"
+  );
 }
 
 /**

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.0
+
+- Display compiler-provided signatures, parameters, return types, and `/** ... */`
+  declaration documentation on hover.
+
 ## 0.2.2
 
 - Replace the document-shaped file icon with a transparent `Lum` light wordmark.

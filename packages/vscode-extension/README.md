@@ -17,4 +17,5 @@ Install Lumiere so `lumiere` is available on `PATH`, or set
 
 Diagnostics and hover information come from the real Lumiere lexer and parser.
 The extension does not maintain a second parser. Hover requires a Lumiere build
-that supports the `lumiere inspect` command.
+that supports inspection protocol 2. Write declaration documentation with
+`/** ... */`; hovering the declaration or one of its references displays it.

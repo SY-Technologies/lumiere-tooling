@@ -12,6 +12,7 @@ import {
 } from "vscode-languageserver/node";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { LumiereCompiler } from "./compiler";
+import { inspectionToMarkdown } from "./hover";
 import { byteRangeToLspRange, positionToByteOffset } from "./positions";
 import { LumiereSeverity } from "./protocol";
 
@@ -60,9 +61,10 @@ connection.onHover(async (params) => {
     if (!result.inspection) {
       return null;
     }
+    const inspection = result.inspection;
     return {
-      contents: { kind: MarkupKind.Markdown, value: `\`\`\`lumiere\n${result.inspection.detail}\n\`\`\`` },
-      range: byteRangeToLspRange(source, result.inspection.range.start, result.inspection.range.end),
+      contents: { kind: MarkupKind.Markdown, value: inspectionToMarkdown(inspection) },
+      range: byteRangeToLspRange(source, inspection.range.start, inspection.range.end),
     };
   } catch (error) {
     if (!isCancellation(error)) {
